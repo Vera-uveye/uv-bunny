@@ -1,4 +1,10 @@
-<img src="/assets/logos/uv_bunny_logo.png">
+<div class="m-3">
+
+    <div class="d-flex flex-row justify-content-between align-items-center">
+
+        <img src="/assets/logos/uv_bunny_logo.png">
+        <button type="button" class="btn btn-primary" routerLink="/main">Home</button>
+    </div>
 
 <h1>Configurations</h1>
 
@@ -11,15 +17,17 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Lettuce</td>
-        <td><button type="button" class="btn btn-secondary">-</button>1<button type="button" class="btn btn-secondary">+</button></td>
+      <tr *ngFor="let item of configs;  let i = index">
+        <th scope="row">{{i+1}}</th>
+        <td>{{item.data.name}}</td>
+        <td>
+            <button type="button" class="btn btn-secondary" (click)="reducePoint(item)">-</button>
+            {{item.data.points}}
+            <button type="button" class="btn btn-secondary" (click)="addPoint(item)">+</button>
+        </td>
       </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Carrot</td>
-        <td><button type="button" class="btn btn-secondary">-</button>1<button type="button" class="btn btn-secondary">+</button></td>
-      </tr>
+
     </tbody>
   </table>
+
+  </div>

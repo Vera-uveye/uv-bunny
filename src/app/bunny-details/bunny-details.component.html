@@ -1,15 +1,23 @@
-<img src="/assets/logos/uv_bunny_logo.png">
+<div class="m-3">
+
+    <div class="d-flex flex-row justify-content-between align-items-center">
+
+        <img src="/assets/logos/uv_bunny_logo.png">
+        <button type="button" class="btn btn-primary" routerLink="/main">Home</button>
+    </div>
 
 <h1>Bunny Details</h1>
 
 <div>
     <div>
-        Bunny Name
+        {{bunny.name}}
     </div>
     <div>
-        5 Happiness Points
+        <span>{{bunny.happiness}}</span> Happiness Points
     </div>
 </div>
+
+<div class="mt-5"></div>
 
 <div class="container">
     <div class="row g-2">
@@ -25,3 +33,5 @@
 
     </div>
   </div>
+
+</div>

@@ -1,4 +1,9 @@
-<img src="/assets/logos/uv_bunny_logo.png">
+<div class="m-3">
+<div class="d-flex flex-row justify-content-between align-items-center">
+
+    <img src="/assets/logos/uv_bunny_logo.png">
+    <button type="button" class="btn btn-primary" routerLink="/configs">Configurations</button>
+</div>
 
 <h1>My bunnies</h1>
 
@@ -11,19 +16,27 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>2</td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>3</td>
+      <tr *ngFor="let item of bunnylist;  let i = index" (click)="goToBunnyDetails(item)" routerLink="/details" [queryParams]="{ id: item.id}">
+        <th scope="row">{{i+1}}</th>
+        <td>{{item.data.name}}</td>
+        <td>{{item.data.happiness}}</td>
       </tr>
     </tbody>
   </table>
 
-<button type="button" class="btn btn-primary" routerLink="/details">Add bunny</button>
-
-<button type="button" class="btn btn-primary" routerLink="/configs">Configurations</button>
+  <h2>Add new Bunny</h2>
+  <form #bunnyform="ngForm" (ngSubmit)="onSubmit(bunnyform)">
+    <div class="row g-3 align-items-center">
+        <div class="col-auto">
+            <label for="nameInput" class="col-form-label">Bunny Name</label>
+        </div>
+        <div class="col-auto">
+            <input type="text" required class="form-control" id="nameInput" name="name" ngModel>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary" [disabled]="!bunnyform.valid">Add</button>
+        </div>
+    </div>
+  </form>
+<!-- <button type="button" class="btn btn-primary" routerLink="/details">Add bunny</button> -->
+</div>

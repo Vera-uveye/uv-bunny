@@ -102,6 +102,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "test-app:build:production",
+            "firebaseProject": "uv-bunny",
+            "firebaseHostingSite": "uv-bunny"
+          }
         }
       }
     }

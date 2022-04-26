@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "uv-bunny": {
+      "hosting": {
+        "test-app": [
+          "uv-bunny"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "uv-bunny"
+  }
+}
