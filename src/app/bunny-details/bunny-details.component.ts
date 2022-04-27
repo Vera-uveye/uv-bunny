@@ -4,6 +4,7 @@ import { FormBuilder, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import firebase from 'firebase/compat/app';
 import { map } from 'rxjs/operators';
+import { EventsService } from '../events.service';
 import FieldValue = firebase.firestore.FieldValue;
 
 @Component({
@@ -26,7 +27,7 @@ export class BunnyDetailsComponent implements OnInit {
   playconf$: any;
 
 
-  constructor(private firestore: AngularFirestore, private route: ActivatedRoute, private fb: FormBuilder) { 
+  constructor(private firestore: AngularFirestore, private route: ActivatedRoute, private fb: FormBuilder, private eService: EventsService) { 
     this.route.queryParams.subscribe(param => {
       let id = param['id'];
       console.log('showing bunny ', id);
@@ -75,6 +76,7 @@ export class BunnyDetailsComponent implements OnInit {
       let conf:any = data.data();
       let points = conf.points;
       this.addPoints(points);
+      this.eService.addBunnyEvent(this.bunny.id, 'feed-lettuce');
     })
   }
 
@@ -84,6 +86,8 @@ export class BunnyDetailsComponent implements OnInit {
       let conf:any = data.data();
       let points = conf.points;
       this.addPoints(points);
+      this.eService.addBunnyEvent(this.bunny.id, 'feed-carrot');
+
     })
   }
 

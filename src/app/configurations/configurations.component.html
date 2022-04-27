@@ -6,33 +6,33 @@
         <button type="button" class="btn btn-primary" routerLink="/main">Home</button>
     </div>
 
-<h1>Configurations</h1>
+    <h1>Configurations</h1>
 
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Activity</th>
-        <th scope="col">Points</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of configs;  let i = index">
-        <th scope="row">{{i+1}}</th>
-        <td>
-            <span>{{item.data.name}}</span>
-            <!-- <span>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Activity</th>
+                <th scope="col">Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of configs;  let i = index">
+                <th scope="row">{{i+1}}</th>
+                <td>
+                    <span>{{item.data.name}}</span>
+                    <!-- <span>
                 <mat-icon aria-hidden="false">{{item.data.label}}</mat-icon>
             </span> -->
-        </td>
-        <td>
-            <button type="button" class="btn btn-secondary" (click)="reducePoint(item)">-</button>
-            {{item.data.points}}
-            <button type="button" class="btn btn-secondary" (click)="addPoint(item)">+</button>
-        </td>
-      </tr>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-secondary" [disabled]="item.data.points < 1" (click)="reducePoint(item)">-</button>
+                    {{item.data.points}}
+                    <button type="button" class="btn btn-secondary" (click)="addPoint(item)">+</button>
+                </td>
+            </tr>
 
-    </tbody>
-  </table>
+        </tbody>
+    </table>
 
-  </div>
+</div>

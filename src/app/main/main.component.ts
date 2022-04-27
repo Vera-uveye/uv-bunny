@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -23,9 +23,10 @@ export class MainComponent implements OnInit {
     //   console.log('bunnies', this.bunnylist);
     // })
 
-    this.bunnies$ = firestore.collection('bunnies').snapshotChanges().pipe(
-      map(changes => changes.map(c => (
-        {id: c.payload.doc.id, data: c.payload.doc.data() }
+    this.bunnies$ = firestore.collection('bunnies').valueChanges({ idField: 'id' }).pipe(
+      tap(r => console.info(r)),
+      map(bunnies => bunnies.map(b => (
+        {id: b.id, data: b }
       )
       ))
     ).subscribe(data => {
