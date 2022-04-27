@@ -19,7 +19,12 @@
     <tbody>
       <tr *ngFor="let item of configs;  let i = index">
         <th scope="row">{{i+1}}</th>
-        <td>{{item.data.name}}</td>
+        <td>
+            <span>{{item.data.name}}</span>
+            <!-- <span>
+                <mat-icon aria-hidden="false">{{item.data.label}}</mat-icon>
+            </span> -->
+        </td>
         <td>
             <button type="button" class="btn btn-secondary" (click)="reducePoint(item)">-</button>
             {{item.data.points}}

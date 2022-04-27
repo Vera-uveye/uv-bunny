@@ -13,6 +13,8 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { FormsModule } from '@angular/forms';
 import { AngularFireFunctionsModule, USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/compat/functions';
 import { AngularFirestoreModule, USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/compat/firestore';
+import {MatIconModule} from '@angular/material/icon';
+
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import { AngularFirestoreModule, USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireFunctionsModule,
-    FormsModule
+    FormsModule,
+    MatIconModule
   ],
   providers: [
     { provide: USE_FIRESTORE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 8080] : undefined },
