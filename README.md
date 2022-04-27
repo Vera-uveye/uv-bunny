@@ -25,3 +25,9 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Running firebase emulators
+
+Run `firebase emulators:start --only firestore,functions` to emulate firestore and functions locally
+
+Run `firebase emulators:start --only firestore --export-on-exit=./saved-data --import=./saved-data` to save and restore data locally
