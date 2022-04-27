@@ -10,7 +10,7 @@ import { ConfigurationsComponent } from './configurations/configurations.compone
 import { environment } from '../environments/environment';
 import { AngularFireModule } from '@angular/fire/compat';
 // import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFireFunctionsModule, USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/compat/functions';
 import { AngularFirestoreModule, USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/compat/firestore';
 import {MatIconModule} from '@angular/material/icon';
@@ -31,6 +31,7 @@ import {MatIconModule} from '@angular/material/icon';
     AngularFirestoreModule,
     AngularFireFunctionsModule,
     FormsModule,
+    ReactiveFormsModule,
     MatIconModule
   ],
   providers: [
