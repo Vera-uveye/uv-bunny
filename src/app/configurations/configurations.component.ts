@@ -12,12 +12,12 @@ import FieldValue = firebase.firestore.FieldValue;
 })
 export class ConfigurationsComponent implements OnInit {
   configs: any;
-  configs$: Subscription;
+  configSub: Subscription;
 
   constructor(private firestore: AngularFirestore) { 
 
     let ucinfig = firestore.collection('configurations').snapshotChanges();
-    this.configs$ = ucinfig.pipe(
+    this.configSub = ucinfig.pipe(
       map(changes => changes.map(c => (
         {id: c.payload.doc.id, data: c.payload.doc.data() }
       )
@@ -42,6 +42,6 @@ export class ConfigurationsComponent implements OnInit {
   }
 
   ngOnDestory() {
-    this.configs$.unsubscribe();
+    this.configSub.unsubscribe();
   }
 }

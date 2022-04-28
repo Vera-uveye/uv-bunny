@@ -19,20 +19,21 @@ export class BunnyDetailsComponent implements OnInit {
     name: 'Bunny Name',
     happiness: 0
   };
-  profilebunny$: any;
-  lettuceconf$: any;
-  carrotconf$: any;
-  bunnies$: any;
+  profileBunnySub: any;
+  lettuceConfSub: any;
+  carrotConfSub: any;
+  bunniesSub: any;
   bunnylist: any =[];
-  playconf$: any;
+  playConfSub: any;
 
 
   constructor(private firestore: AngularFirestore, private route: ActivatedRoute, private fb: FormBuilder, private eService: EventsService) { 
+    // get selected bunny data
     this.route.queryParams.subscribe(param => {
       let id = param['id'];
       console.log('showing bunny ', id);
       if(id !== undefined) {
-        this.profilebunny$ = firestore.collection('bunnies').doc(id).valueChanges().subscribe(b_obj => {
+        this.profileBunnySub = firestore.collection('bunnies').doc(id).valueChanges().subscribe(b_obj => {
           console.log('bunny data ', b_obj);
           let data:any = b_obj;
           this.bunny.id = id;
@@ -44,13 +45,15 @@ export class BunnyDetailsComponent implements OnInit {
       }
     })
 
-    this.bunnies$ = firestore.collection('bunnies').snapshotChanges().pipe(
+    // get list of playmate bunnies
+    this.bunniesSub = firestore.collection('bunnies').snapshotChanges().pipe(
       map(changes => changes.map(c => (
         {id: c.payload.doc.id, data: c.payload.doc.data() }
       )
       ))
     ).subscribe(data => {
       this.bunnylist = [];
+      // remove self
       if(this.bunny.id !== '' && this.bunny.id) {
         data.forEach(element => {
           if(element.id !== this.bunny.id) {
@@ -63,6 +66,7 @@ export class BunnyDetailsComponent implements OnInit {
 
   }
 
+  // init playmate form
   playform = this.fb.group({
     playmate: ['', [Validators.required]]
   })
@@ -72,30 +76,31 @@ export class BunnyDetailsComponent implements OnInit {
 
   feedLettuce() {
     console.log('clicked feed lettuce');
-    this.lettuceconf$ = this.firestore.collection('configurations').doc('feed-lettuce').get().subscribe(data => {
-      let conf:any = data.data();
-      let points = conf.points;
-      this.addPoints(points);
+    this.lettuceConfSub = this.firestore.collection('configurations').doc('feed-lettuce').get().subscribe(data => {
+      // let conf:any = data.data();
+      // let points = conf.points;
+      // this.addPoints(points);
       this.eService.addBunnyEvent(this.bunny.id, 'feed-lettuce');
     })
   }
 
   feedCarrot() {
     console.log('clicked feed carrot');
-    this.carrotconf$ = this.firestore.collection('configurations').doc('feed-carrot').get().subscribe(data => {
-      let conf:any = data.data();
-      let points = conf.points;
-      this.addPoints(points);
+    this.carrotConfSub = this.firestore.collection('configurations').doc('feed-carrot').get().subscribe(data => {
+      // let conf:any = data.data();
+      // let points = conf.points;
+      // this.addPoints(points);
       this.eService.addBunnyEvent(this.bunny.id, 'feed-carrot');
 
     })
   }
 
   onSubmit() {
+    // clicking on play button to add points for playing
     console.log("clicked play with bunny");
     if (this.playform.valid) {
       console.log(this.playmate?.value);
-      this.playconf$ = this.firestore.collection('configurations').doc('play-first-time').get().subscribe(data => {
+      this.playConfSub = this.firestore.collection('configurations').doc('play-first-time').get().subscribe(data => {
         let conf:any = data.data();
         let points = conf.points;
         this.addPoints(points);
@@ -120,20 +125,21 @@ export class BunnyDetailsComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    if(this.profilebunny$) {
-    this.profilebunny$.unsubscribe();
+    // unsubscibes
+    if(this.profileBunnySub) {
+    this.profileBunnySub.unsubscribe();
     }
-    if(this.lettuceconf$) {
-    this.lettuceconf$.unsubscribe();
+    if(this.lettuceConfSub) {
+    this.lettuceConfSub.unsubscribe();
     }
-    if(this.carrotconf$) {
-    this.carrotconf$.unsubscribe();
+    if(this.carrotConfSub) {
+    this.carrotConfSub.unsubscribe();
     }
-    if(this.bunnies$) {
-      this.bunnies$.unsubscribe();
+    if(this.bunniesSub) {
+      this.bunniesSub.unsubscribe();
     }
-    if(this.playconf$) {
-      this.playconf$.unsubscribe();
+    if(this.playConfSub) {
+      this.playConfSub.unsubscribe();
     }
   }
 

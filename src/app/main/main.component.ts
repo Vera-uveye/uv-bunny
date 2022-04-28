@@ -14,7 +14,7 @@ export class MainComponent implements OnInit {
 
   // bunnies: Observable<any[]>;
   bunnylist: any;
-  bunnies$: any;
+  bunniesSub: any;
 
   constructor(private firestore: AngularFirestore) { 
     // this.bunnies = firestore.collection('bunnies').valueChanges();
@@ -23,7 +23,7 @@ export class MainComponent implements OnInit {
     //   console.log('bunnies', this.bunnylist);
     // })
 
-    this.bunnies$ = firestore.collection('bunnies').valueChanges({ idField: 'id' }).pipe(
+    this.bunniesSub = firestore.collection('bunnies').valueChanges({ idField: 'id' }).pipe(
       tap(r => console.info(r)),
       map(bunnies => bunnies.map(b => (
         {id: b.id, data: b }
@@ -51,6 +51,6 @@ export class MainComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.bunnies$.unsubscribe();
+    this.bunniesSub.unsubscribe();
   }
 }
