@@ -25,6 +25,7 @@ export class BunnyDetailsComponent implements OnInit {
   bunniesSub: any;
   bunnylist: any =[];
   playConfSub: any;
+  selectedPlaymate: any;
 
 
   constructor(private firestore: AngularFirestore, private route: ActivatedRoute, private fb: FormBuilder, private eService: EventsService) { 
@@ -100,17 +101,19 @@ export class BunnyDetailsComponent implements OnInit {
     console.log("clicked play with bunny");
     if (this.playform.valid) {
       console.log(this.playmate?.value);
-      this.playConfSub = this.firestore.collection('configurations').doc('play-first-time').get().subscribe(data => {
-        let conf:any = data.data();
-        let points = conf.points;
-        this.addPoints(points);
-      })
+
+      // this.playConfSub = this.firestore.collection('configurations').doc('play-first-time').get().subscribe(data => {
+      //   let conf:any = data.data();
+      //   let points = conf.points;
+      //   this.addPoints(points);
+      // })
+      this.eService.addPlayEvent(this.bunny.id, this.selectedPlaymate.id)
     }
   }
 
-  changePlaymate(e: any) {
-    console.log("selected mate", e.target.value);
-    this.playmate?.setValue(e.target.value, {
+  changePlaymate() {
+    console.log("selected mate", this.selectedPlaymate);
+    this.playmate?.setValue(this.selectedPlaymate, {
       onSelf: true,
     })
   }

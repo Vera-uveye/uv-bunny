@@ -38,10 +38,10 @@
                 <div class="p-3 border bg-light action">
                     <form [formGroup]="playform" (ngSubmit)="onSubmit()"
                         class="d-flex flex-row justify-content-between align-items-center">
-                        <select class="form-select" aria-label="Default select example"
-                            (change)="changePlaymate($event)" formControlName="playmate">
+                        <select [(ngModel)]="selectedPlaymate" class="form-select" aria-label="Default select example"
+                            (change)="changePlaymate()" formControlName="playmate">
                             <option value="" disabled selected>Select a playmate</option>
-                            <option *ngFor="let bunny of bunnylist" [ngValue]="bunny.id">
+                            <option *ngFor="let bunny of bunnylist" [ngValue]="bunny">
                                 {{ bunny.data.name }}
                             </option>
                         </select>
