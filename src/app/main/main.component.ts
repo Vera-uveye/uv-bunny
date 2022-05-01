@@ -1,5 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFireFunctions } from '@angular/fire/compat/functions';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -16,12 +18,17 @@ export class MainComponent implements OnInit {
   bunnylist: any;
   bunniesSub: any;
 
-  constructor(private firestore: AngularFirestore) { 
+  constructor(private firestore: AngularFirestore, private fnctns: AngularFireFunctions) { 
     // this.bunnies = firestore.collection('bunnies').valueChanges();
     // this.bunnies.subscribe(x => {
     //   this.bunnylist = x;
     //   console.log('bunnies', this.bunnylist);
     // })
+
+    const status = fnctns.httpsCallable('createCurrentState');
+    status('hi').toPromise().then(data => {
+      console.log('bunnies from the cloud', data)
+    })
 
     this.bunniesSub = firestore.collection('bunnies').valueChanges({ idField: 'id' }).pipe(
       tap(r => console.info(r)),
