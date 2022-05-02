@@ -40,7 +40,7 @@
                         class="d-flex flex-row justify-content-between align-items-center">
                         <select [(ngModel)]="selectedPlaymate" class="form-select" aria-label="Default select example"
                             (change)="changePlaymate()" formControlName="playmate">
-                            <option value="" disabled selected>Select a playmate</option>
+                            <option [ngValue]="null" disabled selected>Select a playmate</option>
                             <option *ngFor="let bunny of bunnylist" [ngValue]="bunny">
                                 {{ bunny.data.name }}
                             </option>

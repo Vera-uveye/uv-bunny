@@ -72,7 +72,15 @@ export class BunnyDetailsComponent implements OnInit {
     playmate: ['', [Validators.required]]
   })
 
+
   ngOnInit(): void {
+
+  }
+  ngAfterViewInit() {
+    this.playform.setValue({
+      playmate: null
+    })
+    console.log("form ", this.playform)
   }
 
   feedLettuce() {
@@ -112,7 +120,7 @@ export class BunnyDetailsComponent implements OnInit {
       }).catch(err => {
         console.log("error on adding play event", err);
       });
-      this.playmate?.setValue(undefined);
+      this.playmate?.setValue(null);
     }
   }
 
