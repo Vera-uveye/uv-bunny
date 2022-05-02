@@ -6,7 +6,6 @@ import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -17,6 +16,7 @@ export class MainComponent implements OnInit {
   // bunnies: Observable<any[]>;
   bunnylist: any;
   bunniesSub: any;
+  show = false;
 
   constructor(private firestore: AngularFirestore, private fnctns: AngularFireFunctions) { 
     // this.bunnies = firestore.collection('bunnies').valueChanges();
@@ -55,6 +55,20 @@ export class MainComponent implements OnInit {
       this.firestore.collection('bunnies').add(form.value);
       form.reset();
     }
+  }
+
+  deleteBunny(bunny: any) {
+    this.firestore.collection('bunnies').doc(bunny.id).delete().then(v => {
+      console.log("deleted bunny ", bunny);
+      this.show = true;
+      setTimeout(() => {
+        this.show = false;
+      }, 5100);
+    });
+  }
+
+  close() {
+    this.show = false;
   }
 
   ngOnDestroy() {

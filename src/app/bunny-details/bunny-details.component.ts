@@ -107,7 +107,12 @@ export class BunnyDetailsComponent implements OnInit {
       //   let points = conf.points;
       //   this.addPoints(points);
       // })
-      this.eService.addPlayEvent(this.bunny.id, this.selectedPlaymate.id)
+      this.eService.addPlayEvent(this.bunny.id, this.selectedPlaymate.id).then(val => {
+        console.log("played!");
+      }).catch(err => {
+        console.log("error on adding play event", err);
+      });
+      this.playmate?.setValue(undefined);
     }
   }
 
