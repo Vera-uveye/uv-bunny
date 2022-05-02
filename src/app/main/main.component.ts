@@ -25,10 +25,10 @@ export class MainComponent implements OnInit {
     //   console.log('bunnies', this.bunnylist);
     // })
 
-    const status = fnctns.httpsCallable('createCurrentState');
-    status('hi').toPromise().then(data => {
-      console.log('bunnies from the cloud', data)
-    })
+    // const status = fnctns.httpsCallable('createCurrentState');
+    // status('hi').toPromise().then(data => {
+    //   console.log('bunnies from the cloud', data)
+    // })
 
     this.bunniesSub = firestore.collection('bunnies').valueChanges({ idField: 'id' }).pipe(
       tap(r => console.info(r)),

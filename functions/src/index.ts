@@ -94,31 +94,43 @@ async function getPointsByEvent(eventId: string) {
     return 0;
   }
 }
-
-// aggregate event points and return all bunnies + happiness
-export const createCurrentState =
-functions.https.onCall(async (data, context) => {
+// eslint-disable-next-line require-jsdoc
+async function createCurrentState() {
+  // aggregate event points and updates bunnies' happiness
   functions.logger.info("Creating current status");
   const bunnylist = await db.collection("bunnies").listDocuments();
   const ids = bunnylist.map((it) => it.id);
   functions.logger.info(ids);
-  const bs:any = [];
+  // const bs:any = [];
+  const promises = [];
   for (const bunnyId of ids) {
-    const es = await getBunnyHappiness(bunnyId);
-    bs.push({
-      bunny: bunnyId,
-      happiness: es,
-    });
+    // const es = await getBunnyHappiness(bunnyId);
+    // bs.push({
+    //   bunny: bunnyId,
+    //   happiness: es,
+    // });
+    promises.push(await updateBunnyHappiness(bunnyId)); // promise.all
   }
-  return await bs;
-});
+  return await Promise.all(promises);
+}
 
 // eslint-disable-next-line require-jsdoc
 async function updateBunnyHappiness(bId:string) {
   // add the points to happiness by the id of the bunny using aggregation update
   const happypoints = await getBunnyHappiness(bId);
-  db.collection("bunnies").doc(bId)
+  return db.collection("bunnies").doc(bId)
       .set({happiness: happypoints}, {merge: true});
   functions.logger.log("added points to", bId);
 }
 
+export const configEventTrigger = functions.firestore
+// updates the happiness state when the configurations collection is updated
+    .document("/configurations/{docId}")
+    .onWrite(async (snapshot, context) => {
+      functions.logger.log("event trigger", context.params);
+      createCurrentState().then((val) => {
+        functions.logger.log("updated current state", val);
+      }).catch((err) => {
+        functions.logger.log("error creating current state", err);
+      });
+    });

@@ -13,7 +13,7 @@ export class EventsService {
     return await this.firestore.collection(eventCollectionPath).doc().set(data);
   }
 
-  public async addBunnyEvent(bunnyId:string, eventName:string, ) {
+  public async addBunnyEvent(bunnyId:string, eventName:string) {
     let data = {
     timestamp: new Date(),
     eventName: eventName,
