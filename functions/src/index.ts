@@ -73,29 +73,38 @@ async function getAllEventPoints(bId:string) {
   const eventpoints = [];
   const eventids =
   await db.collection("bunnies").doc(bId).collection("events").get();
+
+  const confs: {[key: string]: any} = {};
+  const configs = await db.collection("configurations").get();
+  for await (const conf of configs.docs) {
+    confs[conf.id] = conf.data().points;
+  }
+  console.log("confs object ", confs);
   // return eventids.docs.map(async (it) =>
   //   ({id: it.id, data: await getPointsByEvent(it.data().points )} ));
   for await (const event of eventids.docs) {
-    const pts = getPointsByEvent(await event.data().eventName);
+    const pts = confs[event.data().eventName];
+    // getPointsByEvent(await event.data().eventName);
+    console.log("event points ", pts);
     eventpoints.push({id: event.id, points: await pts});
   }
   return eventpoints;
 }
 
 // eslint-disable-next-line require-jsdoc
-async function getPointsByEvent(eventId: string) {
-  functions.logger.log("event name ", eventId);
-  const evnt =
-  await db.collection("configurations").doc(eventId).get();
-  const data = evnt.data();
-  if (data) {
-    functions.logger.log("points ", data.points);
-    return data.points;
-  } else {
-    functions.logger.log("no data in event");
-    return 0;
-  }
-}
+// async function getPointsByEvent(eventId: string) {
+//   functions.logger.log("event name ", eventId);
+//   const evnt =
+//   await db.collection("configurations").doc(eventId).get();
+//   const data = evnt.data();
+//   if (data) {
+//     functions.logger.log("points ", data.points);
+//     return data.points;
+//   } else {
+//     functions.logger.log("no data in event");
+//     return 0;
+//   }
+// }
 // eslint-disable-next-line require-jsdoc
 async function createCurrentState() {
   // aggregate event points and updates bunnies' happiness
