@@ -32,14 +32,34 @@ export class MainComponent implements OnInit {
 
     this.bunniesSub = firestore.collection('bunnies').valueChanges({ idField: 'id' }).pipe(
       tap(r => console.info(r)),
-      map(bunnies => bunnies.map(b => (
-        {id: b.id, data: b }
+      map(bunnies => bunnies.map((b:any) => (
+        {id: b.id, data: b, smiley: this.setIcon(b.happiness)}
       )
       ))
-    ).subscribe(data => {
+    ).subscribe((data: any) => {
       console.log(data);
+
       this.bunnylist = data;
     })
+  }
+
+  setIcon(points: number | undefined) {
+    if(points !== undefined) {
+    if(points <1) {
+      return "sentiment_very_dissatisfied"
+    } else if(points <10) {
+      return "sentiment_satisfied"
+    } else if(points < 25) {
+      return "sentiment_satisfied_alt"
+    } else if(points <100) {
+      return "sentiment_very_satisfied"
+    } else {
+      return "celebration"
+    }
+    }else {
+      return ""
+    }
+
   }
 
   ngOnInit(): void {
@@ -57,18 +77,52 @@ export class MainComponent implements OnInit {
     }
   }
 
-  deleteBunny(bunny: any) {
-    this.firestore.collection('bunnies').doc(bunny.id).delete().then(v => {
+  async deleteBunny(bunny: any) {
+    const eventsPath = this.firestore.collection(`bunnies/${bunny.id}/events`);
+    const playmatesPath = this.firestore.collection(`bunnies/${bunny.id}/playmates`);
+    const docPath = this.firestore.collection('bunnies').doc(bunny.id);
+    const batch = this.firestore.firestore.batch();
+
+    let events = await eventsPath.get().toPromise();
+      console.log(events);
+      events?.docs.forEach((doc) => {
+        console.log("events in bunny", doc.id)
+        batch.delete(doc.ref);
+      })
+    
+      let playmates = await playmatesPath.get().toPromise();
+      console.log(playmates);
+      playmates?.docs.forEach((doc) => {
+        console.log("playmates of bunny", doc.id)
+        batch.delete(doc.ref);
+      })
+
+    batch.delete(docPath.ref);
+
+    await batch.commit().then(v => {
       console.log("deleted bunny ", bunny);
       this.show = true;
       setTimeout(() => {
         this.show = false;
       }, 5100);
+    }).catch(err => {
+      console.log("error deleting bunny ", err);
     });
+    // this.firestore.collection('bunnies').doc(bunny.id).delete().then(v => {
+    //   console.log("deleted bunny ", bunny);
+    //   this.show = true;
+    //   setTimeout(() => {
+    //     this.show = false;
+    //   }, 5100);
+    // });
   }
 
   close() {
     this.show = false;
+  }
+
+  onSort(e: Event) {
+    console.log("sorting");
   }
 
   ngOnDestroy() {

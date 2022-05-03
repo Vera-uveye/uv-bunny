@@ -11,8 +11,8 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Happiness</th>
+                <th scope="col" sortable="name" (sort)="onSort($event)">Name</th>
+                <th scope="col" sortable="happiness" (sort)="onSort($event)">Happiness</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
@@ -20,11 +20,11 @@
             <tr *ngFor="let item of bunnylist;  let i = index" >
                 <th class="align-middle" scope="row">{{i+1}}</th>
                 <td class="align-middle">{{item.data.name}}</td>
-                <td class="align-middle">{{item.data.happiness}}</td>
+                <td class="align-middle"><span class="d-flex flex-row align-items-center"><span class="me-3">{{item.data.happiness}}</span> <mat-icon class="align-middle">{{item.smiley}}</mat-icon></span></td>
                 <td>
                     <button class="btn btn-outline-primary p-1 m-2" data-bs-toggle="tooltip" data-bs-placement="left" title="Details"
-                    routerLink="/details" [queryParams]="{ id: item.id}"><mat-icon>cruelty_free</mat-icon></button>
-                    <button class="btn btn-outline-primary p-1 m-2" data-bs-toggle="tooltip" data-bs-placement="right" title="Delete" (click)="deleteBunny(item)"><mat-icon>delete</mat-icon></button>
+                    routerLink="/details" [queryParams]="{ id: item.id}"><mat-icon class="align-middle">cruelty_free</mat-icon></button>
+                    <button class="btn btn-outline-primary p-1 m-2" data-bs-toggle="tooltip" data-bs-placement="right" title="Delete" (click)="deleteBunny(item)"><mat-icon class="align-middle">delete</mat-icon></button>
                 </td>
             </tr>
         </tbody>

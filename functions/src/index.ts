@@ -12,7 +12,8 @@ const db = admin.firestore();
 // eslint-disable-next-line require-jsdoc
 // function getPoints(eventName: string) {
 //   functions.logger.log(eventName);
-//   // get points by the event name from configurations collection in the database
+//   // get points by the event name
+// from configurations collection in the database
 //   return new Promise((res, rej) => {
 //     db.collection("configurations").doc(eventName).get().then((confData) => {
 //       const data: any = confData.data();
@@ -28,7 +29,8 @@ const db = admin.firestore();
 
 // eslint-disable-next-line require-jsdoc
 // function addBunnyPoints(_id:string, _points:any) {
-//   // add the points to happiness by the id of the bunny using incremental update
+//   // add the points to happiness
+// by the id of the bunny using incremental update
 //   const increment = admin.firestore.FieldValue.increment(_points);
 //   db.collection("bunnies").doc(_id)
 //       .set({happiness: increment}, {merge: true});
@@ -100,7 +102,7 @@ async function createCurrentState() {
   functions.logger.info("Creating current status");
   const bunnylist = await db.collection("bunnies").listDocuments();
   const ids = bunnylist.map((it) => it.id);
-  functions.logger.info(ids);
+  functions.logger.info("bunny ids", ids);
   // const bs:any = [];
   const promises = [];
   for (const bunnyId of ids) {
