@@ -1,3 +1,6 @@
 .clickbox {
     cursor: pointer;
 }
+.space {
+    height: 4vh;
+}

@@ -1,16 +1,53 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Directive, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireFunctions } from '@angular/fire/compat/functions';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
+export interface Bunny {
+  name: string,
+  happiness: number
+}
+export type SortColumn = keyof Bunny | '';
+export type SortDirection = 'asc' | 'desc' | '';
+const rotate: {[key: string]: SortDirection} = { 'asc': 'desc', 'desc': '', '': 'asc' };
+
+const compare = (v1: string | number, v2: string | number) => v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
+
+
+export interface SortEvent {
+  column: SortColumn;
+  direction: SortDirection;
+}
+@Directive({
+  selector: 'th[sortable]',
+  host: {
+    '[class.asc]': 'direction === "asc"',
+    '[class.desc]': 'direction === "desc"',
+    '(click)': 'rotate()'
+  }
+})
+export class NgbdSortableHeader {
+
+  @Input() sortable: SortColumn = '';
+  @Input() direction: SortDirection = '';
+  @Output() sort = new EventEmitter<SortEvent>();
+
+  rotate() {
+    this.direction = rotate[this.direction];
+    this.sort.emit({column: this.sortable, direction: this.direction});
+  }
+}
+
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css']
 })
+
+
 export class MainComponent implements OnInit {
 
   // bunnies: Observable<any[]>;
@@ -30,7 +67,8 @@ export class MainComponent implements OnInit {
     //   console.log('bunnies from the cloud', data)
     // })
 
-    this.bunniesSub = firestore.collection('bunnies').valueChanges({ idField: 'id' }).pipe(
+    let ref = firestore.collection('bunnies', ref => ref.orderBy('name','asc'));
+    this.bunniesSub = ref.valueChanges({ idField: 'id' }).pipe(
       tap(r => console.info(r)),
       map(bunnies => bunnies.map((b:any) => (
         {id: b.id, data: b, smiley: this.setIcon(b.happiness)}
@@ -121,9 +159,27 @@ export class MainComponent implements OnInit {
     this.show = false;
   }
 
-  onSort(e: Event) {
-    console.log("sorting");
+  @ViewChildren(NgbdSortableHeader)
+  headers!: QueryList<NgbdSortableHeader>;
+
+  onSort({column, direction}: SortEvent) {
+    console.log("sorting", column, direction);
+    this.headers.forEach(header => {
+      if(header.sortable !== column) {
+        header.direction = '';
+      }
+    });
+
+    if (direction === '' || column === '') {
+      // this.bunnylist = COUNTRIES;
+    } else {
+      this.bunnylist = [...this.bunnylist].sort((a, b) => {
+        const res = compare(a.data[column], b.data[column]);
+        return direction === 'asc' ? res : -res;
+      });
+    }
   }
+  
 
   ngOnDestroy() {
     this.bunniesSub.unsubscribe();

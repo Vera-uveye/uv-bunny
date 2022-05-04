@@ -7,12 +7,40 @@ import { map } from 'rxjs/operators';
 import { EventsService } from '../events.service';
 import FieldValue = firebase.firestore.FieldValue;
 
+import {
+  trigger,
+  state,
+  style,
+  animate,
+  transition,
+  keyframes,
+  // ...
+} from '@angular/animations';
+
 @Component({
   selector: 'app-bunny-details',
   templateUrl: './bunny-details.component.html',
-  styleUrls: ['./bunny-details.component.css']
+  styleUrls: ['./bunny-details.component.css'],
+  animations: [
+  trigger('hopp', [
+    transition('* <=> active', [
+      animate('0.3s', keyframes([
+        style({ transform: 'translateY(0) rotate(0deg)' }),
+        style({ transform: 'translateY(-20%) rotate(10deg)' }),
+        style({ transform: 'translateY(0) rotate(0deg)' })
+      ]))
+  ])
+])
+  ]
 })
 export class BunnyDetailsComponent implements OnInit {
+
+  isHopp = true;
+
+
+  toggle() {
+    this.isHopp = !this.isHopp;
+  }
 
   bunny: any = {
     id: '',
@@ -90,6 +118,7 @@ export class BunnyDetailsComponent implements OnInit {
       // let points = conf.points;
       // this.addPoints(points);
       this.eService.addBunnyEvent(this.bunny.id, 'feed-lettuce');
+      this.toggle();
     })
   }
 
@@ -100,6 +129,7 @@ export class BunnyDetailsComponent implements OnInit {
       // let points = conf.points;
       // this.addPoints(points);
       this.eService.addBunnyEvent(this.bunny.id, 'feed-carrot');
+      this.toggle();
 
     })
   }
@@ -121,6 +151,8 @@ export class BunnyDetailsComponent implements OnInit {
         console.log("error on adding play event", err);
       });
       this.playmate?.setValue(null);
+      this.toggle();
+
     }
   }
 

@@ -6,10 +6,13 @@
         </button>
     </div>
 
+    <div class="space"></div>
+
+
     <h1>Bunny Details</h1>
 
     <div class="d-flex flex-column justify-content-between align-items-center">
-        <img class="mb-3" src="/assets/images/bunny.png" width="150" />
+        <img [@hopp]="isHopp ? 'active' : '' " class="mb-3" src="/assets/images/bunny.png" width="150" (click)="toggle()"/>
         <div class="m-2 fw-bolder fs-5">
             {{ bunny.name }}
         </div>
