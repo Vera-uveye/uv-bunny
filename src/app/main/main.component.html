@@ -5,9 +5,28 @@
         <button type="button" class="btn btn-primary" routerLink="/configs">Configurations</button>
     </div>
 
-    <h1>My bunnies</h1>
+    <div class="space"></div>
 
-    <table class="table">
+    <h2>Add new Bunny</h2>
+    <form #bunnyform="ngForm" (ngSubmit)="onSubmit(bunnyform)">
+        <div class="row g-3 align-items-center">
+            <div class="col-auto">
+                <label for="nameInput" class="col-form-label">Bunny Name</label>
+            </div>
+            <div class="col-auto">
+                <input type="text" required class="form-control" id="nameInput" name="name" ngModel>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary" [disabled]="!bunnyform.valid">Add</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="space"></div>
+
+    <h2>My bunnies</h2>
+
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th scope="col">#</th>
@@ -29,23 +48,7 @@
             </tr>
         </tbody>
     </table>
-
-    <h2>Add new Bunny</h2>
-    <form #bunnyform="ngForm" (ngSubmit)="onSubmit(bunnyform)">
-        <div class="row g-3 align-items-center">
-            <div class="col-auto">
-                <label for="nameInput" class="col-form-label">Bunny Name</label>
-            </div>
-            <div class="col-auto">
-                <input type="text" required class="form-control" id="nameInput" name="name" ngModel>
-            </div>
-            <div class="col-auto">
-                <button type="submit" class="btn btn-primary" [disabled]="!bunnyform.valid">Add</button>
-            </div>
-        </div>
-    </form>
-    <!-- <button type="button" class="btn btn-primary" routerLink="/details">Add bunny</button> -->
-
+    <div class="space"></div>
 
 </div>
 
