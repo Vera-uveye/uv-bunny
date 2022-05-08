@@ -54,6 +54,7 @@ export class MainComponent implements OnInit {
   bunnylist: any;
   bunniesSub: any;
   show = false;
+  averageHappiness = 0;
 
   constructor(private firestore: AngularFirestore, private fnctns: AngularFireFunctions) { 
     // this.bunnies = firestore.collection('bunnies').valueChanges();
@@ -78,7 +79,19 @@ export class MainComponent implements OnInit {
       console.log(data);
 
       this.bunnylist = data;
+      this.calcAvrg();
     })
+  }
+
+  calcAvrg() {
+    let sum = 0;
+    this.bunnylist.forEach((element:any) => {
+      if(element.data.happiness) {
+      sum += element.data.happiness;
+      }
+    });
+    console.log('sum', sum);
+    this.averageHappiness = Math.round(sum / this.bunnylist.length * 10) / 10;
   }
 
   setIcon(points: number | undefined) {
