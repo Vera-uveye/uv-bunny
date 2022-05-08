@@ -10,24 +10,6 @@ const db = admin.firestore();
 
 
 // eslint-disable-next-line require-jsdoc
-// function getPoints(eventName: string) {
-//   functions.logger.log(eventName);
-//   // get points by the event name
-// from configurations collection in the database
-//   return new Promise((res, rej) => {
-//     db.collection("configurations").doc(eventName).get().then((confData) => {
-//       const data: any = confData.data();
-//       if (data) {
-//         const pts: number = data.points;
-//         res(pts);
-//       }
-//     }).catch((err) => {
-//       rej(err);
-//     });
-//   });
-// }
-
-// eslint-disable-next-line require-jsdoc
 // function addBunnyPoints(_id:string, _points:any) {
 //   // add the points to happiness
 // by the id of the bunny using incremental update
@@ -41,20 +23,8 @@ export const eventTrigger = functions.firestore
     .document("/bunnies/{bunnyid}/events/{docId}")
     .onCreate(async (snapshot, context) => {
       functions.logger.log("event trigger", context.params);
-      // get points by event name
-      // const points = await getPoints(snapshot.data().eventName);
-      // add points to the bunny happiness
-      // addBunnyPoints(context.params.bunnyid, points);
       return await updateBunnyHappiness(context.params.bunnyid);
     });
-
-// eslint-disable-next-line require-jsdoc
-// async function getAllEvents(bId:string) {
-//   // gets all events data in the event pool of the specifies bunny
-//   const eventids =
-//   await db.collection("bunnies").doc(bId).collection("events").get();
-//   return eventids.docs.map((it) => ({id: it.id, data: it.data()} ));
-// }
 
 // eslint-disable-next-line require-jsdoc
 async function getBunnyHappiness(bId:string) {
@@ -69,7 +39,7 @@ async function getBunnyHappiness(bId:string) {
 
 // eslint-disable-next-line require-jsdoc
 async function getAllEventPoints(bId:string) {
-  // gets all events data in the event pool of the specifies bunny
+  // gets all events data in the event pool of the specified bunny
   const eventpoints = [];
   const eventids =
   await db.collection("bunnies").doc(bId).collection("events").get();
@@ -105,6 +75,7 @@ async function getAllEventPoints(bId:string) {
 //     return 0;
 //   }
 // }
+
 // eslint-disable-next-line require-jsdoc
 async function createCurrentState() {
   // aggregate event points and updates bunnies' happiness
@@ -112,22 +83,17 @@ async function createCurrentState() {
   const bunnylist = await db.collection("bunnies").listDocuments();
   const ids = bunnylist.map((it) => it.id);
   functions.logger.info("bunny ids", ids);
-  // const bs:any = [];
   const promises = [];
   for await (const bunnyId of ids) {
-    // const es = await getBunnyHappiness(bunnyId);
-    // bs.push({
-    //   bunny: bunnyId,
-    //   happiness: es,
-    // });
-    promises.push(await updateBunnyHappiness(bunnyId)); // promise.all
+    promises.push(await updateBunnyHappiness(bunnyId));
   }
   return await Promise.all(promises);
 }
 
 // eslint-disable-next-line require-jsdoc
 async function updateBunnyHappiness(bId:string) {
-  // add the points to happiness by the id of the bunny using aggregation update
+  // updates the projection of bunny happiness
+  // with the id of the bunny using aggregation update
   const happypoints = await getBunnyHappiness(bId);
   return await db.collection("bunnies").doc(bId)
       .set({happiness: happypoints}, {merge: true});

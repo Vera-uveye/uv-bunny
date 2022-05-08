@@ -1,9 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, Directive, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireFunctions } from '@angular/fire/compat/functions';
 import { NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 export interface Bunny {
@@ -50,24 +48,14 @@ export class NgbdSortableHeader {
 
 export class MainComponent implements OnInit {
 
-  // bunnies: Observable<any[]>;
   bunnylist: any;
   bunniesSub: any;
-  show = false;
+  show = false; // display delete toast
   averageHappiness = 0;
 
-  constructor(private firestore: AngularFirestore, private fnctns: AngularFireFunctions) { 
-    // this.bunnies = firestore.collection('bunnies').valueChanges();
-    // this.bunnies.subscribe(x => {
-    //   this.bunnylist = x;
-    //   console.log('bunnies', this.bunnylist);
-    // })
+  constructor(private firestore: AngularFirestore) { 
 
-    // const status = fnctns.httpsCallable('createCurrentState');
-    // status('hi').toPromise().then(data => {
-    //   console.log('bunnies from the cloud', data)
-    // })
-
+    // get value changes of bunnies collection and order
     let ref = firestore.collection('bunnies', ref => ref.orderBy('name','asc'));
     this.bunniesSub = ref.valueChanges({ idField: 'id' }).pipe(
       tap(r => console.info(r)),
@@ -84,6 +72,7 @@ export class MainComponent implements OnInit {
   }
 
   calcAvrg() {
+    // calculates the average happiness of the bunny colony
     let sum = 0;
     this.bunnylist.forEach((element:any) => {
       if(element.data.happiness) {
@@ -95,6 +84,7 @@ export class MainComponent implements OnInit {
   }
 
   setIcon(points: number | undefined) {
+    // set the emoji according to happiness points
     if(points !== undefined) {
     if(points <1) {
       return "sentiment_very_dissatisfied"
@@ -110,17 +100,13 @@ export class MainComponent implements OnInit {
     }else {
       return ""
     }
-
   }
 
   ngOnInit(): void {
   }
 
-  goToBunnyDetails(bunny: any) {
-    console.log('clicked on table row', bunny);
-  }
-
   onSubmit(form: NgForm) {
+    // add bunny form submit
     if(form.valid) {
       console.log('clicked add bunny', form.value);
       this.firestore.collection('bunnies').add(form.value);
@@ -129,6 +115,7 @@ export class MainComponent implements OnInit {
   }
 
   async deleteBunny(bunny: any) {
+    // remove bunny document and subcollections from the database with a batch commit
     const eventsPath = this.firestore.collection(`bunnies/${bunny.id}/events`);
     const playmatesPath = this.firestore.collection(`bunnies/${bunny.id}/playmates`);
     const docPath = this.firestore.collection('bunnies').doc(bunny.id);
@@ -159,16 +146,9 @@ export class MainComponent implements OnInit {
     }).catch(err => {
       console.log("error deleting bunny ", err);
     });
-    // this.firestore.collection('bunnies').doc(bunny.id).delete().then(v => {
-    //   console.log("deleted bunny ", bunny);
-    //   this.show = true;
-    //   setTimeout(() => {
-    //     this.show = false;
-    //   }, 5100);
-    // });
   }
 
-  close() {
+  close() { // close delete bunny toast
     this.show = false;
   }
 
@@ -176,6 +156,7 @@ export class MainComponent implements OnInit {
   headers!: QueryList<NgbdSortableHeader>;
 
   onSort({column, direction}: SortEvent) {
+    // sorting the table
     console.log("sorting", column, direction);
     this.headers.forEach(header => {
       if(header.sortable !== column) {
@@ -184,7 +165,6 @@ export class MainComponent implements OnInit {
     });
 
     if (direction === '' || column === '') {
-      // this.bunnylist = COUNTRIES;
     } else {
       this.bunnylist = [...this.bunnylist].sort((a, b) => {
         const res = compare(a.data[column], b.data[column]);

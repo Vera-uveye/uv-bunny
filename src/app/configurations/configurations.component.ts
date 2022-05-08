@@ -15,7 +15,7 @@ export class ConfigurationsComponent implements OnInit {
   configSub: Subscription;
 
   constructor(private firestore: AngularFirestore) { 
-
+    // get snapshot changes of configurations for display
     let ucinfig = firestore.collection('configurations').snapshotChanges();
     this.configSub = ucinfig.pipe(
       map(changes => changes.map(c => (
@@ -31,11 +31,13 @@ export class ConfigurationsComponent implements OnInit {
   }
 
   addPoint(item:any) {
+    // update points in the database with increment
     console.log('clicked add point', item);
     const increment = FieldValue.increment(1);
     this.firestore.collection('configurations').doc(item.id).update({ points: increment })
   }
   reducePoint(item:any) {
+    // update points in the database with increment
     console.log('clicked reduce point', item);
     const decrement = FieldValue.increment(-1);
     this.firestore.collection('configurations').doc(item.id).update({ points: decrement })

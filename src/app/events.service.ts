@@ -24,8 +24,8 @@ export class EventsService {
 
   private async addPlaymate(bunny1Id: string, bunny2Id: string) {
     console.log('ids', bunny1Id, bunny2Id);
-    await this.firestore.collection("bunnies").doc(bunny1Id).collection('playmates').doc(bunny2Id).set({id: bunny2Id});
-    await this.firestore.collection("bunnies").doc(bunny2Id).collection('playmates').doc(bunny1Id).set({id: bunny1Id});
+    await this.firestore.collection('bunnies').doc(bunny1Id).collection('playmates').doc(bunny2Id).set({id: bunny2Id});
+    await this.firestore.collection('bunnies').doc(bunny2Id).collection('playmates').doc(bunny1Id).set({id: bunny1Id});
   }
 
   public async addPlayEvent(bunny1Id: string, bunny2Id: string) {
