@@ -36,9 +36,7 @@ import {
 export class BunnyDetailsComponent implements OnInit {
 
   isHopp = true;
-
-
-  toggle() {
+  toggle() { // trigger animation
     this.isHopp = !this.isHopp;
   }
 
@@ -47,6 +45,7 @@ export class BunnyDetailsComponent implements OnInit {
     name: 'Bunny Name',
     happiness: 0
   };
+
   profileBunnySub: any;
   lettuceConfSub: any;
   carrotConfSub: any;
@@ -102,8 +101,8 @@ export class BunnyDetailsComponent implements OnInit {
 
 
   ngOnInit(): void {
-
   }
+
   ngAfterViewInit() {
     this.playform.setValue({
       playmate: null
@@ -112,25 +111,20 @@ export class BunnyDetailsComponent implements OnInit {
   }
 
   feedLettuce() {
+    // add event in database
     console.log('clicked feed lettuce');
     this.lettuceConfSub = this.firestore.collection('configurations').doc('feed-lettuce').get().subscribe(data => {
-      // let conf:any = data.data();
-      // let points = conf.points;
-      // this.addPoints(points);
       this.eService.addBunnyEvent(this.bunny.id, 'feed-lettuce');
       this.toggle();
     })
   }
 
   feedCarrot() {
+    // add event in database
     console.log('clicked feed carrot');
     this.carrotConfSub = this.firestore.collection('configurations').doc('feed-carrot').get().subscribe(data => {
-      // let conf:any = data.data();
-      // let points = conf.points;
-      // this.addPoints(points);
       this.eService.addBunnyEvent(this.bunny.id, 'feed-carrot');
       this.toggle();
-
     })
   }
 
@@ -139,12 +133,6 @@ export class BunnyDetailsComponent implements OnInit {
     console.log("clicked play with bunny");
     if (this.playform.valid) {
       console.log(this.playmate?.value);
-
-      // this.playConfSub = this.firestore.collection('configurations').doc('play-first-time').get().subscribe(data => {
-      //   let conf:any = data.data();
-      //   let points = conf.points;
-      //   this.addPoints(points);
-      // })
       this.eService.addPlayEvent(this.bunny.id, this.selectedPlaymate.id).then(val => {
         console.log("played!");
       }).catch(err => {
@@ -152,7 +140,6 @@ export class BunnyDetailsComponent implements OnInit {
       });
       this.playmate?.setValue(null);
       this.toggle();
-
     }
   }
 
@@ -167,10 +154,7 @@ export class BunnyDetailsComponent implements OnInit {
     return this.playform.get('playmate');
   }
 
-  addPoints(points:number) {
-    const increment = FieldValue.increment(points);
-    this.firestore.collection('bunnies').doc(this.bunny.id).update({ happiness: increment })
-  }
+
 
   ngOnDestroy() {
     // unsubscibes
