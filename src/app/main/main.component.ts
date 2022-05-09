@@ -109,7 +109,7 @@ export class MainComponent implements OnInit {
     // add bunny form submit
     if(form.valid) {
       console.log('clicked add bunny', form.value);
-      this.firestore.collection('bunnies').add(form.value);
+      this.firestore.collection('bunnies').add({name: form.value.name, happiness: 0});
       form.reset();
     }
   }
